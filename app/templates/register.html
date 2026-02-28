@@ -1,0 +1,594 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="register-container">
+    <!-- Animated Background -->
+    <div class="register-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="grid-pattern"></div>
+    </div>
+
+    <!-- Register Card -->
+    <div class="register-card" data-aos="zoom-in" data-aos-duration="1000">
+        <div class="register-header">
+            <div class="logo-wrapper">
+                <i class="bi bi-hospital"></i>
+            </div>
+            <h1 class="brand-title">Create<span>Account</span></h1>
+            <p class="brand-subtitle">Join MediCare Pro Enterprise Healthcare System</p>
+        </div>
+
+        <form method="POST" class="register-form" id="registerForm">
+            <!-- Full Name -->
+            <div class="form-group" data-aos="fade-up" data-aos-delay="100">
+                <label for="name" class="form-label">
+                    <i class="bi bi-person"></i>
+                    Full Name
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" 
+                           id="name" 
+                           name="name" 
+                           class="form-control" 
+                           placeholder="Dr. John Smith / Jane Doe"
+                           required>
+                    <span class="input-icon">
+                        <i class="bi bi-person"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" data-aos="fade-up" data-aos-delay="150">
+                <label for="email" class="form-label">
+                    <i class="bi bi-envelope"></i>
+                    Email Address
+                </label>
+                <div class="input-wrapper">
+                    <input type="email" 
+                           id="email" 
+                           name="email" 
+                           class="form-control" 
+                           placeholder="doctor@hospital.com"
+                           required>
+                    <span class="input-icon">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="form-group" data-aos="fade-up" data-aos-delay="200">
+                <label class="form-label">
+                    <i class="bi bi-person-badge"></i>
+                    Register as
+                </label>
+                <div class="role-cards">
+                    <label class="role-card">
+                        <input type="radio" name="role" value="patient" checked>
+                        <div class="role-content">
+                            <i class="bi bi-person-hearts"></i>
+                            <span class="role-title">Patient</span>
+                            <span class="role-desc">Access medical records & book appointments</span>
+                        </div>
+                    </label>
+                    <label class="role-card">
+                        <input type="radio" name="role" value="doctor">
+                        <div class="role-content">
+                            <i class="bi bi-person-badge"></i>
+                            <span class="role-title">Doctor</span>
+                            <span class="role-desc">Manage patients & approve appointments</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Patient Fields -->
+            <div id="patientFields" class="role-fields">
+                <div class="row g-3">
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="250">
+                        <div class="form-group">
+                            <label for="age" class="form-label">
+                                <i class="bi bi-calendar"></i>
+                                Age
+                            </label>
+                            <input type="number" class="form-control" id="age" name="age" placeholder="30">
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="form-group">
+                            <label for="gender" class="form-label">
+                                <i class="bi bi-gender-ambiguous"></i>
+                                Gender
+                            </label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" data-aos="fade-up" data-aos-delay="350">
+                    <label for="phone" class="form-label">
+                        <i class="bi bi-telephone"></i>
+                        Phone Number
+                    </label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                </div>
+            </div>
+
+            <!-- Doctor Fields -->
+            <div id="doctorFields" class="role-fields" style="display: none;">
+                <div class="form-group" data-aos="fade-up" data-aos-delay="250">
+                    <label for="specialization" class="form-label">
+                        <i class="bi bi-stethoscope"></i>
+                        Specialization
+                    </label>
+                    <select class="form-select" id="specialization" name="specialization">
+                        <option value="">Select specialization</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Dermatology">Dermatology</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Password Fields -->
+            <div class="row g-3">
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <i class="bi bi-lock"></i>
+                            Password
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" 
+                                   id="password" 
+                                   name="password" 
+                                   class="form-control" 
+                                   placeholder="••••••••"
+                                   required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="450">
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">
+                            <i class="bi bi-lock-fill"></i>
+                            Confirm Password
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" 
+                                   id="confirm_password" 
+                                   name="confirm_password" 
+                                   class="form-control" 
+                                   placeholder="••••••••"
+                                   required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm_password')">
+                                <i class="bi bi-eye" id="toggleConfirmIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Strength -->
+            <div class="password-strength-meter" data-aos="fade-up" data-aos-delay="500">
+                <div class="strength-bars">
+                    <div class="strength-bar" id="bar1"></div>
+                    <div class="strength-bar" id="bar2"></div>
+                    <div class="strength-bar" id="bar3"></div>
+                    <div class="strength-bar" id="bar4"></div>
+                </div>
+                <span class="strength-text" id="strengthText">Enter a password</span>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-group" data-aos="fade-up" data-aos-delay="550">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="terms" required>
+                    <span class="checkmark"></span>
+                    <span class="checkbox-label">
+                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and 
+                        <a href="#" class="terms-link">Privacy Policy</a>
+                    </span>
+                </label>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="btn btn-primary btn-lg w-100" id="registerBtn" disabled data-aos="fade-up" data-aos-delay="600">
+                <i class="bi bi-person-plus"></i>
+                <span>Create Account</span>
+                <div class="button-loader"></div>
+            </button>
+
+            <!-- Login Link -->
+            <div class="login-section" data-aos="fade-up" data-aos-delay="650">
+                <p class="text-secondary">Already have an account?</p>
+                <a href="{{ url_for('auth.login') }}" class="login-link">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Sign in to your account
+                </a>
+            </div>
+        </form>
+
+        <!-- Security Badges -->
+        <div class="security-badges" data-aos="fade-up" data-aos-delay="700">
+            <div class="security-badge">
+                <i class="bi bi-shield-check"></i>
+                <span>256-bit SSL</span>
+            </div>
+            <div class="security-badge">
+                <i class="bi bi-incognito"></i>
+                <span>HIPAA Compliant</span>
+            </div>
+            <div class="security-badge">
+                <i class="bi bi-fingerprint"></i>
+                <span>2FA Ready</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <div class="success-animation">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h4 class="mb-3">Registration Successful!</h4>
+                <p class="text-secondary mb-4">Your account has been created successfully.</p>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary w-100">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Proceed to Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.register-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.2;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--primary-500), transparent);
+    top: -100px;
+    left: -100px;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--primary-600), transparent);
+    bottom: -150px;
+    right: -150px;
+    animation: orbFloat 25s ease-in-out infinite reverse;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--primary-400), transparent);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbFloat 15s ease-in-out infinite;
+}
+
+.grid-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(15, 157, 138, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 157, 138, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.register-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 700px;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-2xl);
+    padding: 3rem;
+    box-shadow: var(--shadow-xl), var(--shadow-glow);
+}
+
+.role-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.role-card {
+    cursor: pointer;
+    transition: var(--transition-bounce);
+}
+
+.role-card input {
+    display: none;
+}
+
+.role-content {
+    padding: 1.5rem;
+    background: var(--bg-input);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    transition: var(--transition-base);
+}
+
+.role-card input:checked + .role-content {
+    border-color: var(--primary-500);
+    background: rgba(15, 157, 138, 0.1);
+    box-shadow: var(--shadow-glow);
+}
+
+.role-content i {
+    font-size: 2.5rem;
+    color: var(--primary-500);
+    margin-bottom: 0.5rem;
+}
+
+.role-title {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.role-desc {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+.role-card:hover .role-content {
+    transform: translateY(-3px);
+    border-color: var(--primary-400);
+}
+
+.password-strength-meter {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.strength-bars {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border-light);
+    border-radius: var(--radius-full);
+    transition: var(--transition-base);
+}
+
+.strength-bar.active {
+    background: var(--primary-500);
+}
+
+.strength-text {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+.success-animation {
+    width: 80px;
+    height: 80px;
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.success-animation i {
+    font-size: 3rem;
+    color: var(--success);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.terms-link {
+    color: var(--primary-500);
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+.login-section {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.login-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-500);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-base);
+}
+
+.login-link:hover {
+    gap: 1rem;
+    color: var(--primary-400);
+}
+
+@media (max-width: 768px) {
+    .register-card {
+        padding: 2rem;
+    }
+    
+    .role-cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function togglePassword(fieldId) {
+    const input = document.getElementById(fieldId);
+    const icon = document.getElementById(`toggle${fieldId === 'password' ? 'Password' : 'Confirm'}Icon`);
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+
+// Role selection
+document.querySelectorAll('input[name="role"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const patientFields = document.getElementById('patientFields');
+        const doctorFields = document.getElementById('doctorFields');
+        
+        if (this.value === 'patient') {
+            patientFields.style.display = 'block';
+            doctorFields.style.display = 'none';
+        } else {
+            patientFields.style.display = 'none';
+            doctorFields.style.display = 'block';
+        }
+    });
+});
+
+// Password strength checker
+const password = document.getElementById('password');
+const confirmPassword = document.getElementById('confirm_password');
+const terms = document.getElementById('terms');
+const registerBtn = document.getElementById('registerBtn');
+const bars = document.querySelectorAll('.strength-bar');
+const strengthText = document.getElementById('strengthText');
+
+password.addEventListener('input', checkStrength);
+confirmPassword.addEventListener('input', checkMatch);
+terms.addEventListener('change', validateForm);
+
+function checkStrength() {
+    const value = password.value;
+    let strength = 0;
+    
+    if (value.length >= 6) strength++;
+    if (/[A-Z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+    
+    bars.forEach((bar, index) => {
+        if (index < strength) {
+            bar.classList.add('active');
+        } else {
+            bar.classList.remove('active');
+        }
+    });
+    
+    const texts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+    strengthText.textContent = texts[strength];
+    
+    validateForm();
+}
+
+function checkMatch() {
+    validateForm();
+}
+
+function validateForm() {
+    const passwordValid = password.value.length >= 6;
+    const passwordsMatch = password.value === confirmPassword.value && confirmPassword.value.length > 0;
+    const termsChecked = terms.checked;
+    
+    registerBtn.disabled = !(passwordValid && passwordsMatch && termsChecked);
+}
+
+// Form submission
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const button = document.getElementById('registerBtn');
+    button.classList.add('loading');
+    
+    setTimeout(() => {
+        button.classList.remove('loading');
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+        
+        setTimeout(() => {
+            window.location.href = "{{ url_for('auth.login') }}";
+        }, 2000);
+    }, 1500);
+});
+</script>
+{% endblock %}

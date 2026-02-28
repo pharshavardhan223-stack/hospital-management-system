@@ -1,0 +1,1091 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* ===== DARK THEME DOCTOR DASHBOARD STYLES ===== */
+:root {
+    /* Dark Theme Colors */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #1e293b;
+    --bg-input: #334155;
+    --bg-hover: #3b4a5f;
+    
+    /* Accent Colors */
+    --primary: #2C7A7B;
+    --primary-dark: #1e5a5b;
+    --primary-light: #3d8f90;
+    
+    /* Status Colors */
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.15);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.15);
+    --warning: #f59e0b;
+    --warning-bg: rgba(245, 158, 11, 0.15);
+    --info: #3b82f6;
+    --info-bg: rgba(59, 130, 246, 0.15);
+    
+    /* Text Colors */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-muted: #64748b;
+    
+    /* Borders */
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-medium: rgba(255, 255, 255, 0.1);
+    --border-accent: rgba(44, 122, 123, 0.3);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+    --shadow-colored: 0 8px 16px rgba(44, 122, 123, 0.3);
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-2xl: 32px;
+    --radius-full: 9999px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Welcome Banner */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: var(--radius-xl);
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    color: white;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-accent);
+}
+
+.welcome-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.welcome-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-title i {
+    margin-right: 0.75rem;
+    color: rgba(255,255,255,0.9);
+}
+
+.welcome-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    margin: 0;
+}
+
+.welcome-stats {
+    display: flex;
+    gap: 2rem;
+    background: rgba(255,255,255,0.1);
+    padding: 1rem 2rem;
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-light);
+}
+
+.welcome-stat {
+    text-align: center;
+}
+
+.welcome-stat .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1.2;
+}
+
+.welcome-stat .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Stat Cards */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-colored);
+    border-color: var(--border-accent);
+}
+
+.stat-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+.stat-icon.bg-warning-light {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.stat-icon.bg-success-light {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.stat-icon.bg-primary-light {
+    background: rgba(44, 122, 123, 0.2);
+    color: var(--primary);
+}
+
+.stat-icon.bg-info-light {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Section Cards */
+.section-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+.section-header {
+    padding: 1.2rem 1.5rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.section-header.warning {
+    background: linear-gradient(135deg, #b45309, #92400e);
+    color: white;
+}
+
+.section-header.success {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+}
+
+.section-header.primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+}
+
+.section-header h5 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.section-body {
+    padding: 1.5rem;
+}
+
+/* Tables */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: 2px solid var(--border-medium);
+    text-align: left;
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+}
+
+.table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(16, 185, 129, 0.3);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(239, 68, 68, 0.3);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-colored);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border: 1px solid var(--border-medium);
+    color: var(--text-secondary);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Appointment Cards */
+.appointment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.appointment-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-colored);
+    border-color: var(--border-accent);
+}
+
+.appointment-time {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-patient {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.appointment-detail {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-detail i {
+    width: 18px;
+    color: var(--primary);
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(44, 122, 123, 0.2);
+    outline: none;
+    background: var(--bg-hover);
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-tertiary);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+    color: var(--text-muted);
+}
+
+.empty-state h5 {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.empty-state p {
+    margin-bottom: 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 1050;
+    overflow: auto;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-medium);
+    pointer-events: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-header.bg-danger {
+    background: linear-gradient(135deg, #b91c1c, #991b1b);
+    color: white;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+}
+
+.btn-close:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.modal-body {
+    padding: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Summary Card */
+.summary-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--danger);
+}
+
+.summary-row {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.summary-label {
+    width: 100px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.summary-value {
+    flex: 1;
+    color: var(--text-primary);
+}
+
+/* Suggestion Buttons */
+.suggestion-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.suggestion-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: left;
+}
+
+.suggestion-btn i {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.suggestion-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.suggestion-btn:hover i {
+    color: white;
+}
+
+/* Date Filter Form */
+.date-filter-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.date-filter-form .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .welcome-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .welcome-stats {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-sm {
+        width: 100%;
+    }
+    
+    .date-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .suggestion-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-dialog {
+        margin: 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+</style>
+
+<!-- Welcome Banner -->
+<div class="welcome-banner">
+    <div class="welcome-content">
+        <div>
+            <h1 class="welcome-title">
+                <i class="bi bi-person-badge"></i> 
+                Welcome, Dr. {{ session.user_name }}!
+            </h1>
+            <p class="welcome-subtitle">{{ doctor.specialization }} Specialist</p>
+        </div>
+        <div class="welcome-stats">
+            <div class="welcome-stat">
+                <span class="stat-value">{{ pending_appointments|length }}</span>
+                <span class="stat-label">Pending</span>
+            </div>
+            <div class="welcome-stat">
+                <span class="stat-value">{{ todays_appointments|length }}</span>
+                <span class="stat-label">Today</span>
+            </div>
+            <div class="welcome-stat">
+                <span class="stat-value">{{ total_patients|default(0) }}</span>
+                <span class="stat-label">Patients</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-card-inner">
+            <div class="stat-icon bg-warning-light">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div>
+                <div class="stat-number">{{ pending_appointments|length }}</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-inner">
+            <div class="stat-icon bg-success-light">
+                <i class="bi bi-calendar-day"></i>
+            </div>
+            <div>
+                <div class="stat-number">{{ todays_appointments|length }}</div>
+                <div class="stat-label">Today's Schedule</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-inner">
+            <div class="stat-icon bg-primary-light">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+                <div class="stat-number">{{ approved_count|default(0) }}</div>
+                <div class="stat-label">Approved</div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-inner">
+            <div class="stat-icon bg-info-light">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <div class="stat-number">{{ patients_count|default(0) }}</div>
+                <div class="stat-label">Total Patients</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Appointments Section -->
+<div class="section-card">
+    <div class="section-header warning">
+        <h5>
+            <i class="bi bi-clock-history"></i>
+            Pending Appointment Requests
+            <span class="badge">{{ pending_appointments|length }}</span>
+        </h5>
+    </div>
+    <div class="section-body">
+        {% if pending_appointments %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Symptoms</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in pending_appointments %}
+                    <tr>
+                        <td>
+                            <strong>{{ apt.patient_name }}</strong><br>
+                            <small style="color: var(--text-tertiary);">Age: {{ apt.age }} | {{ apt.gender }}</small>
+                        </td>
+                        <td>{{ apt.appointment_date }}</td>
+                        <td>{{ apt.time_slot }}</td>
+                        <td>{{ apt.symptoms[:30] }}{% if apt.symptoms|length > 30 %}...{% endif %}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ url_for('doctor.approve_appointment', appointment_id=apt.id) }}" 
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Approve appointment for {{ apt.patient_name }}?')">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-sm btn-danger"
+                                        onclick="openRejectModal({{ apt.id }}, '{{ apt.patient_name }}', '{{ apt.appointment_date }}', '{{ apt.time_slot }}', '{{ apt.symptoms|replace("'", "\\'") }}')">
+                                    <i class="bi bi-x-lg"></i> Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-check2-circle"></i>
+            <h5>No Pending Requests</h5>
+            <p>All caught up! You have no pending appointment requests.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Today's Schedule Section -->
+<div class="section-card">
+    <div class="section-header success">
+        <h5>
+            <i class="bi bi-calendar-day"></i>
+            Today's Schedule - {{ now.strftime('%B %d, %Y') }}
+        </h5>
+    </div>
+    <div class="section-body">
+        {% if todays_appointments %}
+        <div class="appointment-grid">
+            {% for apt in todays_appointments %}
+            <div class="appointment-card">
+                <div class="appointment-time">
+                    <i class="bi bi-clock"></i> {{ apt.time_slot }}
+                </div>
+                <div class="appointment-patient">{{ apt.patient_name }}</div>
+                <div class="appointment-detail">
+                    <i class="bi bi-person"></i> Age: {{ apt.age }} | {{ apt.gender }}
+                </div>
+                {% if apt.phone %}
+                <div class="appointment-detail">
+                    <i class="bi bi-telephone"></i> {{ apt.phone }}
+                </div>
+                {% endif %}
+                <div class="appointment-detail">
+                    <i class="bi bi-chat-dots"></i> {{ apt.symptoms }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <h5>No Appointments Today</h5>
+            <p>You have no scheduled appointments for today.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- View by Date Section -->
+<div class="section-card">
+    <div class="section-header primary">
+        <h5>
+            <i class="bi bi-calendar-week"></i>
+            View Appointments by Date
+        </h5>
+    </div>
+    <div class="section-body">
+        <form action="{{ url_for('doctor.appointments_by_date') }}" method="POST" class="date-filter-form">
+            <div class="form-group">
+                <label class="form-label">Select Date</label>
+                <input type="date" class="form-control" name="appointment_date" 
+                       value="{{ selected_date or now.strftime('%Y-%m-%d') }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> View Schedule
+            </button>
+        </form>
+
+        {% if selected_date and appointments_by_date %}
+        <div style="margin-top: 2rem;">
+            <h6 style="margin-bottom: 1rem; font-weight: 600; color: var(--text-secondary);">Appointments for {{ selected_date }}</h6>
+            {% if appointments_by_date %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Age/Gender</th>
+                            <th>Contact</th>
+                            <th>Symptoms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for apt in appointments_by_date %}
+                        <tr>
+                            <td>{{ apt.time_slot }}</td>
+                            <td>{{ apt.patient_name }}</td>
+                            <td>{{ apt.age }}/{{ apt.gender }}</td>
+                            <td>{{ apt.phone }}</td>
+                            <td>{{ apt.symptoms[:30] }}{% if apt.symptoms|length > 30 %}...{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p style="color: var(--text-tertiary);">No appointments scheduled for this date.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Single Reject Modal -->
+<div class="modal" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title">
+                    <i class="bi bi-x-circle"></i>
+                    Reject Appointment
+                </h5>
+                <button type="button" class="btn-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="rejectForm" method="POST">
+                <div class="modal-body">
+                    <!-- Appointment Summary -->
+                    <div class="summary-card">
+                        <div class="summary-row">
+                            <span class="summary-label">Patient:</span>
+                            <span class="summary-value" id="modalPatient"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Date:</span>
+                            <span class="summary-value" id="modalDate"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Time:</span>
+                            <span class="summary-value" id="modalTime"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Symptoms:</span>
+                            <span class="summary-value" id="modalSymptoms"></span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Suggestions -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Quick Suggestions:</label>
+                        <div class="suggestion-grid">
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('Doctor is on leave on this date')">
+                                <i class="bi bi-calendar-x"></i> Doctor on Leave
+                            </button>
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('Schedule is fully booked for this time slot')">
+                                <i class="bi bi-clock"></i> Fully Booked
+                            </button>
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('Please provide more detailed symptoms')">
+                                <i class="bi bi-chat-dots"></i> Need More Details
+                            </button>
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('This case requires a specialist consultation')">
+                                <i class="bi bi-person-badge"></i> Specialist Required
+                            </button>
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('Please reschedule for a different time slot')">
+                                <i class="bi bi-arrow-repeat"></i> Reschedule
+                            </button>
+                            <button type="button" class="suggestion-btn" onclick="setSuggestion('Emergency cases only during this time')">
+                                <i class="bi bi-exclamation-triangle"></i> Emergency Only
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Rejection Reason -->
+                    <div class="form-group">
+                        <label for="rejection_reason" class="form-label">
+                            Reason for Rejection <span style="color: var(--danger);">*</span>
+                        </label>
+                        <textarea class="form-control" id="rejection_reason" name="rejection_reason" 
+                                  rows="4" required></textarea>
+                        <small style="color: var(--text-tertiary);">This reason will be visible to the patient.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Current appointment ID being rejected
+let currentAppointmentId = null;
+
+// Function to open reject modal
+function openRejectModal(id, patient, date, time, symptoms) {
+    currentAppointmentId = id;
+    
+    // Set form action
+    const form = document.getElementById('rejectForm');
+    form.action = "{{ url_for('doctor.reject_appointment', appointment_id=0) }}".replace('0', id);
+    
+    // Set patient details
+    document.getElementById('modalPatient').textContent = patient;
+    document.getElementById('modalDate').textContent = date;
+    document.getElementById('modalTime').textContent = time;
+    document.getElementById('modalSymptoms').textContent = symptoms || 'Not specified';
+    
+    // Clear previous reason
+    document.getElementById('rejection_reason').value = '';
+    
+    // Show modal
+    document.getElementById('rejectModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+// Function to close modal
+function closeModal() {
+    document.getElementById('rejectModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// Function to set suggestion text
+function setSuggestion(text) {
+    document.getElementById('rejection_reason').value = text;
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('rejectModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+// Form validation
+document.getElementById('rejectForm').addEventListener('submit', function(e) {
+    const reason = document.getElementById('rejection_reason').value.trim();
+    if (!reason) {
+        e.preventDefault();
+        alert('Please provide a reason for rejection');
+    }
+});
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('rejectModal').classList.contains('show')) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}
