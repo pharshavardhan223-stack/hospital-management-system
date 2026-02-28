@@ -298,11 +298,6 @@ body {
     background: #6366f1;
 }
 
-.book-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
 /* Table */
 .table-responsive {
     overflow-x: auto;
@@ -629,6 +624,7 @@ body {
                     </div>
                     {% endfor %}
                 </div>
+                <!-- Availability Message - Shows below time selection -->
                 <div id="availabilityMessage" class="availability-message"></div>
             </div>
 
@@ -777,96 +773,124 @@ function showToast(message, type) {
     }, 3000);
 }
 
-$(document).ready(function() {
-    console.log("✅ Document ready");
+// SIMPLE AND GUARANTEED TO WORK
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded");
     
     // Set min date
     var today = new Date().toISOString().split('T')[0];
-    $('#appointment_date').attr('min', today);
+    document.getElementById('appointment_date').setAttribute('min', today);
     
-    // Check availability function
-    function checkAvailability() {
-        var doctor_id = $('#doctor_id').val();
-        var appointment_date = $('#appointment_date').val();
-        var time_slot = $('input[name="time_slot"]:checked').val();
-        var msgDiv = $('#availabilityMessage');
+    // Get all elements
+    var doctorSelect = document.getElementById('doctor_id');
+    var dateInput = document.getElementById('appointment_date');
+    var timeRadios = document.querySelectorAll('input[name="time_slot"]');
+    var msgDiv = document.getElementById('availabilityMessage');
+    
+    // Function to check availability
+    function checkAvailabilitySimple() {
+        var doctor_id = doctorSelect.value;
+        var appointment_date = dateInput.value;
+        var time_slot = null;
         
+        // Find selected time
+        for (var i = 0; i < timeRadios.length; i++) {
+            if (timeRadios[i].checked) {
+                time_slot = timeRadios[i].value;
+                break;
+            }
+        }
+        
+        console.log("Selected:", doctor_id, appointment_date, time_slot);
+        
+        // Hide message if any field is missing
         if (!doctor_id || !appointment_date || !time_slot) {
-            msgDiv.removeClass('show success error').hide();
+            msgDiv.classList.remove('show', 'success', 'error');
+            msgDiv.style.display = 'none';
             return;
         }
         
-        msgDiv.removeClass('success error').addClass('show').html('<i class="bi bi-arrow-repeat"></i> Checking availability...');
+        // Show checking message
+        msgDiv.classList.remove('success', 'error');
+        msgDiv.classList.add('show');
+        msgDiv.style.display = 'block';
+        msgDiv.innerHTML = '<i class="bi bi-arrow-repeat"></i> Checking availability...';
         
-        $.ajax({
-            url: '{{ url_for("patient.check_slot_availability") }}',
+        // Create form data
+        var formData = new FormData();
+        formData.append('doctor_id', doctor_id);
+        formData.append('appointment_date', appointment_date);
+        formData.append('time_slot', time_slot);
+        
+        // Send AJAX request
+        fetch('{{ url_for("patient.check_slot_availability") }}', {
             method: 'POST',
-            data: {
-                doctor_id: doctor_id,
-                appointment_date: appointment_date,
-                time_slot: time_slot
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.available) {
-                    msgDiv.removeClass('error').addClass('success').html('<i class="bi bi-check-circle"></i> ' + response.message);
-                } else {
-                    msgDiv.removeClass('success').addClass('error').html('<i class="bi bi-exclamation-circle"></i> ' + response.message);
-                }
-            },
-            error: function() {
-                msgDiv.removeClass('success').addClass('error').html('<i class="bi bi-exclamation-triangle"></i> Error checking availability');
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Response:", data);
+            if (data.available) {
+                msgDiv.classList.remove('error');
+                msgDiv.classList.add('success');
+                msgDiv.innerHTML = '<i class="bi bi-check-circle"></i> ' + data.message;
+            } else {
+                msgDiv.classList.remove('success');
+                msgDiv.classList.add('error');
+                msgDiv.innerHTML = '<i class="bi bi-exclamation-circle"></i> ' + data.message;
             }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            msgDiv.classList.remove('success');
+            msgDiv.classList.add('error');
+            msgDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Error checking availability';
         });
     }
     
-    // Bind change events
-    $('#doctor_id').change(checkAvailability);
-    $('#appointment_date').change(checkAvailability);
-    $('input[name="time_slot"]').change(checkAvailability);
+    // Add event listeners
+    doctorSelect.addEventListener('change', checkAvailabilitySimple);
+    dateInput.addEventListener('change', checkAvailabilitySimple);
+    for (var i = 0; i < timeRadios.length; i++) {
+        timeRadios[i].addEventListener('change', checkAvailabilitySimple);
+    }
     
     // Form submission
-    $('#appointmentForm').submit(function(e) {
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
         e.preventDefault();
         console.log("Form submitted");
         
-        var formData = $(this).serialize();
-        var bookBtn = $('#bookBtn');
-        var originalText = bookBtn.text();
+        var bookBtn = document.getElementById('bookBtn');
+        var originalText = bookBtn.innerHTML;
         
-        bookBtn.prop('disabled', true).text('Booking...');
+        bookBtn.disabled = true;
+        bookBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Booking...';
         
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: formData,
-            dataType: 'json',
-            success: function(response) {
-                console.log("Success:", response);
-                
-                if (response.success) {
-                    showToast(response.message, 'success');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-                } else {
-                    showToast(response.message, 'error');
-                    bookBtn.prop('disabled', false).text(originalText);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error:", error);
-                console.log("Response:", xhr.responseText);
-                
-                var errorMessage = 'An error occurred. Please try again.';
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    errorMessage = response.message || errorMessage;
-                } catch(e) {}
-                
-                showToast(errorMessage, 'error');
-                bookBtn.prop('disabled', false).text(originalText);
+        var formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Booking response:", data);
+            if (data.success) {
+                showToast(data.message, 'success');
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            } else {
+                showToast(data.message, 'error');
+                bookBtn.disabled = false;
+                bookBtn.innerHTML = originalText;
             }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            showToast('An error occurred', 'error');
+            bookBtn.disabled = false;
+            bookBtn.innerHTML = originalText;
         });
     });
 });

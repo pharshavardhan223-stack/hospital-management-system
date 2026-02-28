@@ -800,3 +800,80 @@ body::before {
 .float {
     animation: float 3s ease-in-out infinite;
 }
+<style>
+
+/* ===============================
+   ADVANCED DASHBOARD CARD STYLE
+================================= */
+
+.dashboard-card {
+    background: linear-gradient(145deg, #161b22, #1c2128);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 18px;
+    padding: 2rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Glow border animation */
+.dashboard-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background: linear-gradient(
+        45deg,
+        #0f9d8a,
+        transparent,
+        #0f9d8a
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+/* Card content */
+.dashboard-card * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hover Glow */
+.dashboard-card:hover::before {
+    opacity: 1;
+    filter: blur(8px);
+}
+
+/* Smooth hover lift */
+.dashboard-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(15,157,138,0.25);
+}
+
+/* Title */
+.dashboard-card h4 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Value number */
+.dashboard-card .card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f9d8a;
+}
+
+/* Icon style */
+.dashboard-card .card-icon {
+    font-size: 2.5rem;
+    color: rgba(255,255,255,0.2);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+</style>
