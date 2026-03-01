@@ -877,3 +877,37 @@ body::before {
 }
 
 </style>
+
+/* Chat section styles */
+.chat-section {
+    margin-bottom: 25px;
+}
+
+.chat-section .card-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.chat-section .card-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-section .card-header h3 i {
+    color: rgba(255,255,255,0.9);
+}
+
+.chat-section .btn-primary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s;
+}
+
+.chat-section .btn-primary:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}

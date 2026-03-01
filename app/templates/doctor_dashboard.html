@@ -9,7 +9,7 @@
     --bg-secondary: #1e293b;
     --bg-card: #1e293b;
     --bg-input: #334155;
-    --bg-hover: #3b4a5f;
+    --bg-hover: #2d3a4f;
     
     /* Accent Colors */
     --primary: #2C7A7B;
@@ -50,6 +50,10 @@
     --radius-xl: 24px;
     --radius-2xl: 32px;
     --radius-full: 9999px;
+    
+    /* Transitions */
+    --transition: all 0.2s ease;
+    --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 * {
@@ -62,12 +66,102 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
+    line-height: 1.5;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 20px;
+}
+
+/* ===== CHAT SECTION ===== */
+.chat-section {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.chat-button {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: var(--transition-bounce);
+    border: 1px solid var(--border-accent);
+    box-shadow: var(--shadow-colored);
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(44, 122, 123, 0.4);
+}
+
+.chat-button i {
+    font-size: 20px;
+}
+
+.chat-badge {
+    background: var(--danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Doctor Status Toggle */
+.doctor-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--bg-card);
+    padding: 10px 25px;
+    border-radius: 50px;
+    border: 1px solid var(--border-light);
+}
+
+.status-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #10b981;
+    transition: var(--transition);
+}
+
+.status-dot.offline {
+    background: var(--text-muted);
+}
+
+.status-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Welcome Banner */
@@ -79,6 +173,25 @@ body {
     color: white;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-accent);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .welcome-content {
@@ -87,6 +200,8 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .welcome-title {
@@ -148,7 +263,21 @@ body {
     padding: 1.5rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-light);
-    transition: all 0.3s ease;
+    transition: var(--transition-bounce);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    opacity: 0;
+    transition: var(--transition);
 }
 
 .stat-card:hover {
@@ -157,10 +286,16 @@ body {
     border-color: var(--border-accent);
 }
 
+.stat-card:hover::before {
+    opacity: 1;
+}
+
 .stat-card-inner {
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: relative;
+    z-index: 2;
 }
 
 .stat-icon {
@@ -216,6 +351,12 @@ body {
     margin-bottom: 2rem;
     overflow: hidden;
     border: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.section-card:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-colored);
 }
 
 .section-header {
@@ -255,6 +396,7 @@ body {
 /* Tables */
 .table-responsive {
     overflow-x: auto;
+    border-radius: var(--radius-md);
 }
 
 .table {
@@ -280,6 +422,10 @@ body {
     color: var(--text-secondary);
 }
 
+.table tbody tr {
+    transition: var(--transition);
+}
+
 .table tbody tr:hover {
     background: var(--bg-hover);
 }
@@ -296,8 +442,10 @@ body {
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition-bounce);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-sm {
@@ -306,34 +454,31 @@ body {
 }
 
 .btn-success {
-    background: var(--success);
+    background: linear-gradient(135deg, var(--success), #059669);
     color: white;
 }
 
 .btn-success:hover {
-    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
 }
 
 .btn-danger {
-    background: var(--danger);
+    background: linear-gradient(135deg, var(--danger), #dc2626);
     color: white;
 }
 
 .btn-danger:hover {
-    background: #dc2626;
     transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
 }
 
 .btn-primary {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-colored);
 }
@@ -353,6 +498,7 @@ body {
 .action-buttons {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 /* Appointment Cards */
@@ -367,7 +513,7 @@ body {
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
     padding: 1.2rem;
-    transition: all 0.3s ease;
+    transition: var(--transition-bounce);
 }
 
 .appointment-card:hover {
@@ -427,7 +573,7 @@ body {
     border-radius: var(--radius-md);
     background: var(--bg-input);
     color: var(--text-primary);
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .form-control:focus {
@@ -481,7 +627,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(5px);
     z-index: 1050;
     overflow: auto;
 }
@@ -513,6 +659,18 @@ body {
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-medium);
     pointer-events: auto;
+    animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .modal-header {
@@ -551,10 +709,12 @@ body {
     justify-content: center;
     border-radius: 50%;
     color: white;
+    transition: var(--transition);
 }
 
 .btn-close:hover {
     background: rgba(255,255,255,0.2);
+    transform: rotate(90deg);
 }
 
 .modal-body {
@@ -615,7 +775,7 @@ body {
     font-size: 0.9rem;
     color: var(--text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
     width: 100%;
     text-align: left;
 }
@@ -629,6 +789,7 @@ body {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .suggestion-btn:hover i {
@@ -649,6 +810,52 @@ body {
     margin-bottom: 0;
 }
 
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: var(--bg-card);
+    border-left: 4px solid var(--success);
+    color: var(--text-primary);
+    border-radius: var(--radius-lg);
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 2000;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast.error {
+    border-left-color: var(--danger);
+}
+
+.toast i {
+    font-size: 20px;
+}
+
+.toast.success i {
+    color: var(--success);
+}
+
+.toast.error i {
+    color: var(--danger);
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .stats-row {
@@ -659,6 +866,15 @@ body {
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
+    }
+    
+    .chat-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .doctor-status {
+        justify-content: center;
     }
     
     .welcome-content {
@@ -715,7 +931,39 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card, .section-card {
+    animation: slideIn 0.5s ease-out;
+}
 </style>
+
+<!-- ===== CHAT SECTION WITH STATUS ===== -->
+<div class="chat-section">
+    <a href="{{ url_for('chat.inbox') }}" class="chat-button">
+        <i class="bi bi-chat-dots-fill"></i>
+        Patient Messages
+        <span class="chat-badge" id="chatBadge" style="display: none;">0</span>
+    </a>
+    
+    <div class="doctor-status">
+        <div class="status-toggle" id="statusToggle">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">Online</span>
+        </div>
+    </div>
+</div>
 
 <!-- Welcome Banner -->
 <div class="welcome-banner">
@@ -821,7 +1069,7 @@ body {
                             <strong>{{ apt.patient_name }}</strong><br>
                             <small style="color: var(--text-tertiary);">Age: {{ apt.age }} | {{ apt.gender }}</small>
                         </td>
-                        <td>{{ apt.appointment_date }}</td>
+                        <td><strong>{{ apt.appointment_date }}</strong></td>
                         <td>{{ apt.time_slot }}</td>
                         <td>{{ apt.symptoms[:30] }}{% if apt.symptoms|length > 30 %}...{% endif %}</td>
                         <td>
@@ -950,7 +1198,7 @@ body {
     </div>
 </div>
 
-<!-- Single Reject Modal -->
+<!-- Reject Modal -->
 <div class="modal" id="rejectModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -1027,39 +1275,92 @@ body {
     </div>
 </div>
 
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
 <script>
-// Current appointment ID being rejected
+// ===== CHAT FUNCTIONALITY =====
+function updateChatBadge() {
+    fetch('/chat/unread-count')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('chatBadge');
+            if (data.count > 0) {
+                badge.textContent = data.count;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error updating chat badge:', error));
+}
+
+// Update chat badge every 10 seconds
+setInterval(updateChatBadge, 10000);
+updateChatBadge();
+
+// ===== DOCTOR STATUS TOGGLE =====
+const statusToggle = document.getElementById('statusToggle');
+const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
+let isOnline = true;
+
+if (statusToggle) {
+    statusToggle.addEventListener('click', function() {
+        isOnline = !isOnline;
+        if (isOnline) {
+            statusDot.classList.remove('offline');
+            statusText.textContent = 'Online';
+            showToast('You are now online', 'success');
+        } else {
+            statusDot.classList.add('offline');
+            statusText.textContent = 'Offline';
+            showToast('You are now offline', 'success');
+        }
+    });
+}
+
+// ===== TOAST FUNCTION =====
+function showToast(message, type) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="bi bi-' + (type === 'success' ? 'check-circle-fill' : 'exclamation-circle-fill') + '"></i> ' + message;
+    toast.style.display = 'flex';
+    
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
+}
+
+// ===== REJECT MODAL FUNCTIONS =====
 let currentAppointmentId = null;
 
-// Function to open reject modal
 function openRejectModal(id, patient, date, time, symptoms) {
     currentAppointmentId = id;
     
-    // Set form action
     const form = document.getElementById('rejectForm');
-    form.action = "{{ url_for('doctor.reject_appointment', appointment_id=0) }}".replace('0', id);
+    if (form) {
+        form.action = "{{ url_for('doctor.reject_appointment', appointment_id=0) }}".replace('0', id);
+    }
     
-    // Set patient details
     document.getElementById('modalPatient').textContent = patient;
     document.getElementById('modalDate').textContent = date;
     document.getElementById('modalTime').textContent = time;
     document.getElementById('modalSymptoms').textContent = symptoms || 'Not specified';
     
-    // Clear previous reason
     document.getElementById('rejection_reason').value = '';
     
-    // Show modal
     document.getElementById('rejectModal').classList.add('show');
     document.body.style.overflow = 'hidden';
 }
 
-// Function to close modal
 function closeModal() {
     document.getElementById('rejectModal').classList.remove('show');
     document.body.style.overflow = '';
 }
 
-// Function to set suggestion text
 function setSuggestion(text) {
     document.getElementById('rejection_reason').value = text;
 }
@@ -1073,18 +1374,33 @@ window.onclick = function(event) {
 }
 
 // Form validation
-document.getElementById('rejectForm').addEventListener('submit', function(e) {
-    const reason = document.getElementById('rejection_reason').value.trim();
-    if (!reason) {
-        e.preventDefault();
-        alert('Please provide a reason for rejection');
-    }
-});
+const rejectForm = document.getElementById('rejectForm');
+if (rejectForm) {
+    rejectForm.addEventListener('submit', function(e) {
+        const reason = document.getElementById('rejection_reason').value.trim();
+        if (!reason) {
+            e.preventDefault();
+            alert('Please provide a reason for rejection');
+        }
+    });
+}
 
 // Close modal on escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && document.getElementById('rejectModal').classList.contains('show')) {
         closeModal();
+    }
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Doctor dashboard loaded');
+    
+    // Set default date for date filter if not set
+    const dateInput = document.querySelector('input[name="appointment_date"]');
+    if (dateInput && !dateInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
     }
 });
 </script>

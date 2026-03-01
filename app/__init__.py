@@ -68,14 +68,55 @@ def init_db():
         )
     ''')
     
-    # Create indexes
+    # Create chat tables
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doctor_id INTEGER NOT NULL,
+            patient_id INTEGER NOT NULL,
+            appointment_id INTEGER,
+            last_message TEXT,
+            last_message_time TIMESTAMP,
+            unread_doctor INTEGER DEFAULT 0,
+            unread_patient INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'active',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE,
+            FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE,
+            FOREIGN KEY (appointment_id) REFERENCES appointments (id) ON DELETE SET NULL,
+            UNIQUE(doctor_id, patient_id, appointment_id)
+        )
+    ''')
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id INTEGER NOT NULL,
+            sender_id INTEGER NOT NULL,
+            sender_role TEXT NOT NULL,
+            message TEXT NOT NULL,
+            attachment TEXT,
+            is_read BOOLEAN DEFAULT 0,
+            is_emergency BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE
+        )
+    ''')
+    
+    # Create indexes for chat tables
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_conversations_doctor ON conversations(doctor_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_conversations_patient ON conversations(patient_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_messages_created ON messages(created_at)')
+    
+    # Create indexes for existing tables
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(appointment_date)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_appointments_doctor_date ON appointments(doctor_id, appointment_date)')
     
     conn.commit()
     conn.close()
-    print("✅ Database initialized successfully!")
+    print("✅ Database initialized successfully with chat tables!")
 
 def create_app():
     app = Flask(__name__)
@@ -89,10 +130,12 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.patient import patient_bp
     from app.routes.doctor import doctor_bp
+    from app.routes.chat import chat_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(patient_bp, url_prefix='/patient')
     app.register_blueprint(doctor_bp, url_prefix='/doctor')
+    app.register_blueprint(chat_bp, url_prefix='/chat')
     
     # Root route
     @app.route('/')

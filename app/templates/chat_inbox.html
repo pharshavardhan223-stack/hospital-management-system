@@ -1,0 +1,559 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* ===== CHAT INBOX STYLES ===== */
+:root {
+    --primary: #2C7A7B;
+    --primary-dark: #1e5a5b;
+    --primary-light: #3d8f90;
+    --bg-card: #1e293b;
+    --bg-hover: #2d3a4f;
+    --bg-input: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-accent: rgba(44, 122, 123, 0.3);
+    --danger: #ef4444;
+    --success: #10b981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Back Button - FIXED */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border-radius: 50px;
+    border: 1px solid var(--border-light);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+    background: var(--bg-hover);
+    border-color: var(--border-accent);
+}
+
+.back-button i {
+    color: var(--primary);
+}
+
+/* Inbox Container */
+.inbox-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header */
+.inbox-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 20px 20px 0 0;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.inbox-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: 24px;
+}
+
+.inbox-header h2 i {
+    color: rgba(255,255,255,0.9);
+    font-size: 28px;
+}
+
+.online-status {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.online-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Search Bar */
+.search-bar {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Conversation List */
+.conversation-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Conversation Item */
+.conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+.conversation-item:hover {
+    background: var(--bg-hover);
+    transform: translateX(5px);
+}
+
+.conversation-item.unread {
+    background: rgba(44, 122, 123, 0.1);
+    position: relative;
+}
+
+.conversation-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary);
+}
+
+/* Avatar */
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin-right: 18px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.avatar.online::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+}
+
+/* Conversation Info */
+.conversation-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.conversation-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.patient-details {
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.specialization {
+    color: var(--primary);
+    font-size: 12px;
+    background: rgba(44, 122, 123, 0.15);
+    padding: 2px 10px;
+    border-radius: 50px;
+}
+
+.last-message {
+    color: var(--text-tertiary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.last-message i {
+    font-size: 12px;
+    color: var(--primary);
+}
+
+.last-message .emergency-tag {
+    background: var(--danger);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-size: 10px;
+    margin-left: 8px;
+    animation: emergencyPulse 1.5s infinite;
+}
+
+@keyframes emergencyPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Conversation Meta */
+.conversation-meta {
+    text-align: right;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.message-time {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.unread-badge {
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 50px;
+    display: inline-block;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-tertiary);
+}
+
+.empty-state i {
+    font-size: 70px;
+    margin-bottom: 20px;
+    color: var(--border-light);
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.empty-state p {
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.start-chat-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.start-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(44, 122, 123, 0.4);
+}
+
+/* Scrollbar */
+.conversation-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.conversation-list::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.conversation-list::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 3px;
+}
+
+.conversation-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .conversation-item {
+        padding: 15px;
+    }
+    
+    .avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        margin-right: 12px;
+    }
+    
+    .conversation-name {
+        font-size: 15px;
+    }
+    
+    .last-message {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inbox-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .last-message {
+        max-width: 150px;
+    }
+}
+</style>
+
+<div class="inbox-container">
+    <!-- Back Button - FIXED with correct URL -->
+    <a href="{% if role == 'doctor' %}{{ url_for('doctor.dashboard') }}{% else %}{{ url_for('patient.dashboard') }}{% endif %}" class="back-button">
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <!-- Header -->
+    <div class="inbox-header">
+        <h2>
+            <i class="bi bi-chat-dots-fill"></i>
+            Messages
+        </h2>
+        <div class="online-status">
+            <span class="online-dot"></span>
+            {{ conversations|length }} Chat{% if conversations|length != 1 %}s{% endif %}
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search conversations...">
+    </div>
+
+    <!-- Conversation List -->
+    <div class="conversation-list" id="conversationList">
+        {% if conversations %}
+            {% for conv in conversations %}
+            <!-- Clickable Conversation Item -->
+            <a href="{{ url_for('chat.conversation', conversation_id=conv.id) }}" 
+               class="conversation-item {% if conv.unread > 0 %}unread{% endif %}">
+                
+                <!-- Avatar -->
+                <div class="avatar {% if conv.last_message_time %}online{% endif %}">
+                    {% if role == 'doctor' %}
+                        {{ conv.patient_name[0] }}
+                    {% else %}
+                        {{ conv.doctor_name[0] }}
+                    {% endif %}
+                </div>
+                
+                <!-- Conversation Details -->
+                <div class="conversation-info">
+                    <div class="conversation-name">
+                        {% if role == 'doctor' %}
+                            {{ conv.patient_name }}
+                            <span class="patient-details">
+                                • Age: {{ conv.age }} | {{ conv.gender }}
+                            </span>
+                        {% else %}
+                            Dr. {{ conv.doctor_name }}
+                            <span class="specialization">{{ conv.specialization }}</span>
+                        {% endif %}
+                        
+                        {% if conv.last_message and 'EMERGENCY' in conv.last_message %}
+                        <span class="emergency-tag">🚨 Emergency</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="last-message">
+                        {% if conv.last_message %}
+                            <i class="bi bi-check2{% if conv.unread == 0 %}-all{% endif %}"></i>
+                            {{ conv.last_message }}
+                        {% else %}
+                            <span style="color: var(--text-tertiary);">No messages yet. Start chatting!</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Meta Info -->
+                <div class="conversation-meta">
+                    {% if conv.last_message_time %}
+                    <div class="message-time">
+                        {% set time_parts = conv.last_message_time.split(' ') %}
+                        {% if time_parts|length > 1 %}
+                            {{ time_parts[1][:5] }}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if conv.unread > 0 %}
+                        <span class="unread-badge">{{ conv.unread }}</span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <i class="bi bi-chat"></i>
+                <h3>No conversations yet</h3>
+                <p>
+                    {% if role == 'doctor' %}
+                        When patients message you, they will appear here.
+                    {% else %}
+                        Go to "Messages with Doctors" to start a new conversation.
+                    {% endif %}
+                </p>
+                {% if role == 'patient' %}
+                <a href="{{ url_for('chat.select_doctor') }}" class="start-chat-btn">
+                    <i class="bi bi-plus-circle"></i> Start New Chat
+                </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Search functionality
+document.getElementById('searchInput')?.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase().trim();
+    const conversations = document.querySelectorAll('.conversation-item');
+    let visibleCount = 0;
+    
+    conversations.forEach(conv => {
+        const name = conv.querySelector('.conversation-name').textContent.toLowerCase();
+        const lastMsg = conv.querySelector('.last-message').textContent.toLowerCase();
+        
+        if (name.includes(searchTerm) || lastMsg.includes(searchTerm)) {
+            conv.style.display = 'flex';
+            visibleCount++;
+        } else {
+            conv.style.display = 'none';
+        }
+    });
+    
+    // Update header count
+    const statusDiv = document.querySelector('.online-status');
+    if (statusDiv) {
+        statusDiv.innerHTML = `<span class="online-dot"></span> ${visibleCount} Chat${visibleCount !== 1 ? 's' : ''}`;
+    }
+});
+
+// Auto-refresh unread count
+function updateUnreadCount() {
+    fetch('/chat/unread-count')
+        .then(response => response.json())
+        .then(data => {
+            // Update page title with unread count
+            if (data.count > 0) {
+                document.title = `(${data.count}) MediCarePro - Messages`;
+            } else {
+                document.title = 'MediCarePro - Messages';
+            }
+        })
+        .catch(error => console.error('Error updating unread count:', error));
+}
+
+// Update every 10 seconds
+setInterval(updateUnreadCount, 10000);
+updateUnreadCount();
+
+console.log('✅ Chat inbox loaded');
+</script>
+{% endblock %}

@@ -7,13 +7,19 @@
     --bg-primary: #0f172a;
     --bg-card: #1e293b;
     --bg-input: #334155;
+    --bg-hover: #2d3a4f;
     --primary: #818cf8;
+    --primary-dark: #6366f1;
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-tertiary: #94a3b8;
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-accent: rgba(129, 140, 248, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+    --shadow-colored: 0 8px 16px rgba(129, 140, 248, 0.3);
 }
 
 * {
@@ -34,13 +40,115 @@ body {
     padding: 20px;
 }
 
+/* ===== CHAT BUTTON STYLES ===== */
+.chat-section {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.chat-button {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    border: 1px solid var(--border-accent);
+    box-shadow: var(--shadow-colored);
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(129, 140, 248, 0.4);
+}
+
+.chat-button i {
+    font-size: 20px;
+}
+
+.chat-badge {
+    background: var(--danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* My Chats Button */
+.my-chats-btn {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.3s;
+    border: 1px solid var(--border-light);
+}
+
+.my-chats-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+}
+
+.my-chats-btn i {
+    color: var(--primary);
+}
+
+.my-chats-badge {
+    background: var(--danger);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
 /* Welcome Card */
 .welcome-card {
     background: linear-gradient(135deg, #1e293b, #0f172a);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 30px;
     margin-bottom: 30px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-accent);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
 }
 
 .welcome-content {
@@ -68,10 +176,11 @@ body {
 .stats-row {
     display: flex;
     gap: 30px;
-    background: #1e293b;
+    background: rgba(255,255,255,0.03);
     padding: 15px 30px;
     border-radius: 50px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(10px);
 }
 
 .stat-item {
@@ -89,6 +198,7 @@ body {
     font-size: 12px;
     color: var(--text-tertiary);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Stats Grid */
@@ -101,15 +211,22 @@ body {
 
 .stat-card {
     background: var(--bg-card);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-colored);
 }
 
 .stat-icon {
     width: 48px;
     height: 48px;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -118,22 +235,22 @@ body {
 }
 
 .stat-card.total .stat-icon {
-    background: rgba(129, 140, 248, 0.2);
+    background: rgba(129, 140, 248, 0.15);
     color: var(--primary);
 }
 
 .stat-card.pending .stat-icon {
-    background: rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.15);
     color: var(--warning);
 }
 
 .stat-card.approved .stat-icon {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.15);
     color: var(--success);
 }
 
 .stat-card.rejected .stat-icon {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.15);
     color: var(--danger);
 }
 
@@ -159,9 +276,15 @@ body {
 /* Cards */
 .card {
     background: var(--bg-card);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 25px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s;
+}
+
+.card:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-colored);
 }
 
 .card-header {
@@ -173,6 +296,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--text-primary);
 }
 
 .card-header h3 i {
@@ -191,6 +315,7 @@ body {
     color: var(--text-tertiary);
     margin-bottom: 8px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-label i {
@@ -202,15 +327,17 @@ body {
     width: 100%;
     padding: 12px 15px;
     background: var(--bg-input);
-    border: 1px solid #475569;
-    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
     color: var(--text-primary);
     font-size: 14px;
+    transition: all 0.2s;
 }
 
 .form-control:focus, .form-select:focus {
     outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
 }
 
 /* Time Slots */
@@ -235,8 +362,8 @@ body {
     padding: 10px 5px;
     text-align: center;
     background: var(--bg-input);
-    border: 1px solid #475569;
-    border-radius: 6px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
     color: var(--text-tertiary);
     font-size: 12px;
     cursor: pointer;
@@ -246,21 +373,35 @@ body {
 .time-slot label:hover {
     border-color: var(--primary);
     color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .time-slot input[type="radio"]:checked + label {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
+    box-shadow: var(--shadow-colored);
 }
 
 /* Availability Message */
 .availability-message {
     margin-top: 15px;
     padding: 12px 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     display: none;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .availability-message.show {
@@ -268,39 +409,54 @@ body {
 }
 
 .availability-message.success {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.15);
     color: var(--success);
-    border: 1px solid var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .availability-message.error {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.15);
     color: var(--danger);
-    border: 1px solid var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.availability-message i {
+    margin-right: 8px;
 }
 
 /* Book Button */
 .book-btn {
     width: 100%;
     padding: 15px;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.book-btn:hover {
-    background: #6366f1;
+.book-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-colored);
+}
+
+.book-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Table */
 .table-responsive {
     overflow-x: auto;
+    border-radius: 12px;
 }
 
 .appointments-table {
@@ -310,17 +466,22 @@ body {
 
 .appointments-table th {
     text-align: left;
-    padding: 12px;
+    padding: 15px;
     color: var(--text-tertiary);
     font-size: 12px;
     text-transform: uppercase;
-    border-bottom: 1px solid #334155;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .appointments-table td {
-    padding: 12px;
-    border-bottom: 1px solid #1e293b;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-light);
     color: var(--text-secondary);
+}
+
+.appointments-table tbody tr:hover {
+    background: var(--bg-hover);
 }
 
 /* Date Badge */
@@ -328,17 +489,18 @@ body {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    background: #1e293b;
-    border-radius: 6px;
+    background: var(--bg-input);
+    border-radius: 8px;
     overflow: hidden;
-    min-width: 40px;
+    min-width: 45px;
+    border: 1px solid var(--border-light);
 }
 
 .date-badge .day {
     font-size: 16px;
     font-weight: 700;
-    color: white;
-    padding: 2px 5px;
+    color: var(--text-primary);
+    padding: 3px 5px;
 }
 
 .date-badge .month {
@@ -347,42 +509,53 @@ body {
     color: white;
     width: 100%;
     text-align: center;
-    padding: 2px;
+    padding: 3px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Status Badges */
 .status-badge {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 5px 12px;
     border-radius: 50px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
+    border: 1px solid transparent;
 }
 
 .status-badge.pending {
-    background: rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.15);
     color: var(--warning);
+    border-color: rgba(245, 158, 11, 0.3);
 }
 
 .status-badge.approved {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.15);
     color: var(--success);
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
 .status-badge.rejected {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.15);
     color: var(--danger);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 /* View Button */
 .view-btn {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid var(--danger);
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     color: var(--danger);
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
     font-size: 11px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .view-btn:hover {
@@ -400,33 +573,46 @@ body {
 
 .tip-card {
     background: var(--bg-card);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
     display: flex;
     gap: 15px;
+    align-items: flex-start;
+    transition: all 0.3s;
+}
+
+.tip-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-colored);
 }
 
 .tip-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(129, 140, 248, 0.2);
-    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    background: rgba(129, 140, 248, 0.15);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary);
+    font-size: 20px;
+    flex-shrink: 0;
 }
 
 .tip-content h4 {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-primary);
     margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .tip-content p {
     font-size: 12px;
     color: var(--text-tertiary);
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* Modal */
@@ -438,6 +624,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -449,11 +636,24 @@ body {
 
 .modal-content {
     background: var(--bg-card);
-    border-radius: 16px;
+    border-radius: 20px;
     width: 90%;
     max-width: 400px;
     padding: 25px;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
+    animation: modalPop 0.3s;
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .modal-header {
@@ -465,6 +665,10 @@ body {
 
 .modal-header h3 {
     color: var(--danger);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .close-btn {
@@ -473,15 +677,22 @@ body {
     color: var(--text-tertiary);
     font-size: 24px;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--danger);
+    transform: rotate(90deg);
 }
 
 .reason-text {
-    background: #1e293b;
+    background: var(--bg-input);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 12px;
     border-left: 4px solid var(--danger);
     margin-bottom: 20px;
     color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .modal-footer {
@@ -490,12 +701,20 @@ body {
 }
 
 .modal-footer button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     background: var(--primary);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-footer button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 /* Toast */
@@ -507,16 +726,41 @@ body {
     background: var(--bg-card);
     border-left: 4px solid var(--success);
     color: var(--text-primary);
-    border-radius: 8px;
+    border-radius: 12px;
     display: none;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     z-index: 2000;
-    border: 1px solid #334155;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
+    animation: slideInRight 0.3s;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .toast.error {
     border-left-color: var(--danger);
+}
+
+.toast i {
+    font-size: 20px;
+}
+
+.toast.success i {
+    color: var(--success);
+}
+
+.toast.error i {
+    color: var(--danger);
 }
 
 /* Responsive */
@@ -528,6 +772,16 @@ body {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .chat-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .chat-button, .my-chats-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 768px) {
@@ -538,8 +792,52 @@ body {
     .tips-grid {
         grid-template-columns: 1fr;
     }
+    
+    .welcome-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stats-row {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-input);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-tertiary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
 }
 </style>
+
+<!-- ===== CHAT SECTION ===== -->
+<div class="chat-section">
+    <a href="{{ url_for('chat.select_doctor') }}" class="chat-button">
+        <i class="bi bi-chat-dots-fill"></i>
+        Messages with Doctors
+        <span class="chat-badge" id="chatBadge" style="display: none;">0</span>
+    </a>
+    
+    <a href="{{ url_for('chat.inbox') }}" class="my-chats-btn">
+        <i class="bi bi-inbox"></i>
+        My Chats
+        <span class="my-chats-badge" id="myChatsBadge" style="display: none;">0</span>
+    </a>
+</div>
 
 <!-- Welcome Card -->
 <div class="welcome-card">
@@ -743,14 +1041,41 @@ body {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-// Modal functions
+// ===== CHAT FUNCTIONALITY =====
+function updateChatBadge() {
+    fetch('/chat/unread-count')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('chatBadge');
+            const myChatsBadge = document.getElementById('myChatsBadge');
+            
+            if (data.count > 0) {
+                badge.textContent = data.count;
+                badge.style.display = 'inline';
+                myChatsBadge.textContent = data.count;
+                myChatsBadge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+                myChatsBadge.style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error updating chat badge:', error));
+}
+
+// Update chat badge every 10 seconds
+setInterval(updateChatBadge, 10000);
+updateChatBadge();
+
+// ===== MODAL FUNCTIONS =====
 function showReason(reason) {
     document.getElementById('reasonText').innerText = reason;
     document.getElementById('reasonModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
     document.getElementById('reasonModal').classList.remove('show');
+    document.body.style.overflow = '';
 }
 
 // Close modal when clicking outside
@@ -761,11 +1086,11 @@ window.onclick = function(event) {
     }
 }
 
-// Toast function
+// ===== TOAST FUNCTION =====
 function showToast(message, type) {
     var toast = document.getElementById('toast');
     toast.className = 'toast ' + type;
-    toast.innerHTML = '<i class="bi bi-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + message;
+    toast.innerHTML = '<i class="bi bi-' + (type === 'success' ? 'check-circle-fill' : 'exclamation-circle-fill') + '"></i> ' + message;
     toast.style.display = 'flex';
     
     setTimeout(function() {
@@ -773,22 +1098,26 @@ function showToast(message, type) {
     }, 3000);
 }
 
-// SIMPLE AND GUARANTEED TO WORK
+// ===== APPOINTMENT BOOKING FUNCTIONALITY =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Page loaded");
+    console.log("✅ Patient dashboard loaded");
     
-    // Set min date
+    // Set min date for appointment
     var today = new Date().toISOString().split('T')[0];
-    document.getElementById('appointment_date').setAttribute('min', today);
+    var dateInput = document.getElementById('appointment_date');
+    if (dateInput) {
+        dateInput.setAttribute('min', today);
+    }
     
     // Get all elements
     var doctorSelect = document.getElementById('doctor_id');
     var dateInput = document.getElementById('appointment_date');
     var timeRadios = document.querySelectorAll('input[name="time_slot"]');
     var msgDiv = document.getElementById('availabilityMessage');
+    var bookBtn = document.getElementById('bookBtn');
     
     // Function to check availability
-    function checkAvailabilitySimple() {
+    function checkAvailability() {
         var doctor_id = doctorSelect.value;
         var appointment_date = dateInput.value;
         var time_slot = null;
@@ -801,7 +1130,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        console.log("Selected:", doctor_id, appointment_date, time_slot);
+        console.log("Checking availability:", {doctor_id, appointment_date, time_slot});
         
         // Hide message if any field is missing
         if (!doctor_id || !appointment_date || !time_slot) {
@@ -829,70 +1158,91 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("Response:", data);
+            console.log("Availability response:", data);
             if (data.available) {
                 msgDiv.classList.remove('error');
                 msgDiv.classList.add('success');
-                msgDiv.innerHTML = '<i class="bi bi-check-circle"></i> ' + data.message;
+                msgDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i> ' + data.message;
             } else {
                 msgDiv.classList.remove('success');
                 msgDiv.classList.add('error');
-                msgDiv.innerHTML = '<i class="bi bi-exclamation-circle"></i> ' + data.message;
+                msgDiv.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i> ' + data.message;
             }
         })
         .catch(error => {
-            console.error("Error:", error);
+            console.error("Availability check error:", error);
             msgDiv.classList.remove('success');
             msgDiv.classList.add('error');
-            msgDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Error checking availability';
+            msgDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Error checking availability';
         });
     }
     
-    // Add event listeners
-    doctorSelect.addEventListener('change', checkAvailabilitySimple);
-    dateInput.addEventListener('change', checkAvailabilitySimple);
+    // Add event listeners for real-time checking
+    if (doctorSelect) doctorSelect.addEventListener('change', checkAvailability);
+    if (dateInput) dateInput.addEventListener('change', checkAvailability);
     for (var i = 0; i < timeRadios.length; i++) {
-        timeRadios[i].addEventListener('change', checkAvailabilitySimple);
+        timeRadios[i].addEventListener('change', checkAvailability);
     }
     
     // Form submission
-    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        console.log("Form submitted");
-        
-        var bookBtn = document.getElementById('bookBtn');
-        var originalText = bookBtn.innerHTML;
-        
-        bookBtn.disabled = true;
-        bookBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Booking...';
-        
-        var formData = new FormData(this);
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Booking response:", data);
-            if (data.success) {
-                showToast(data.message, 'success');
-                setTimeout(function() {
-                    location.reload();
-                }, 2000);
-            } else {
-                showToast(data.message, 'error');
+    var appointmentForm = document.getElementById('appointmentForm');
+    if (appointmentForm) {
+        appointmentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log("📝 Form submitted");
+            
+            var bookBtn = document.getElementById('bookBtn');
+            var originalText = bookBtn.innerHTML;
+            
+            bookBtn.disabled = true;
+            bookBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Booking...';
+            
+            var formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Booking response:", data);
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    showToast(data.message, 'error');
+                    bookBtn.disabled = false;
+                    bookBtn.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error("Booking error:", error);
+                showToast('An error occurred. Please try again.', 'error');
                 bookBtn.disabled = false;
                 bookBtn.innerHTML = originalText;
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            showToast('An error occurred', 'error');
-            bookBtn.disabled = false;
-            bookBtn.innerHTML = originalText;
+            });
         });
-    });
+    }
+    
+    // Initial check if all fields are selected
+    if (doctorSelect && doctorSelect.value && dateInput && dateInput.value) {
+        var checkedRadio = document.querySelector('input[name="time_slot"]:checked');
+        if (checkedRadio) {
+            checkAvailability();
+        }
+    }
+});
+
+// ===== ESCAPE KEY HANDLER =====
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        var modal = document.getElementById('reasonModal');
+        if (modal.classList.contains('show')) {
+            closeModal();
+        }
+    }
 });
 </script>
 {% endblock %}
